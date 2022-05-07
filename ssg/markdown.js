@@ -98,6 +98,26 @@ var htmlContent = {
     },
     "excerpt": ""
   },
+  "markdown/examples/state.md": {
+    "content": "\nWhen query returns an object and you want to store it in React State, you can use zeus to have 100% type-safe objects in your state.\n\nHaving the following schema:\n\n```graphql\ntype Query {\n  listUsers: [User!]\n}\n\ntype User {\n  createdAt: String!\n  firstName: String!\n  lastName: String!\n  age: Int\n  username: String!\n  id: String!\n}\n```\n\nYou can use zeus types to get the type of the objects received from GraphQL Backend\n\n```tsx\nimport React, { useState } from 'react';\nimport { GraphQLTypes, InputType, Selector, Chain } from './zeus';\n\nconst userSelector = Selector('User')({\n  createdAt: true,\n  firstName: true,\n  lastName: true,\n  id: true,\n});\n\ntype StoredUser = InputType<GraphQLTypes['User'], typeof userSelector>\n\nconst getFullName = (u:StoredUser) => u.firstName + ' ' + u.lastName\n\nexport const UsersList: React.FC = () => {\n  const [users, setUsers] = useState<Array<StoredUser>>([]);\n\n  useEffect(()=>{\n      Chain('https://yourschemaurl.com/graphql', {})('query')({\n        listUsers: userSelector\n      }).then( response => {\n        // 100% type-safe\n        setUsers(response.data)\n      })\n    };\n  },[])\n\n  return (\n    <div>\n      {users.map((u) => (\n        <div key={u.id} className=\"flex items-center\">\n          <div className=\"font-bold p-4 flex-1\">{getFullName(u)}</div>\n          <div className=\"p-4\">{u.createdAt}</div>\n        </div>\n      ))}\n    </div>\n  );\n};\n```\n",
+    "data": {
+      "link": "state",
+      "title": "React State",
+      "order": 2,
+      "category": "Examples"
+    },
+    "excerpt": ""
+  },
+  "markdown/examples/forms.md": {
+    "content": "\nTo use zeus with forms you should make use of it's generated ValueTypes. When submitting form using a mutation It is much easier and type-safe to do it using `ValueTypes`.\n\nHaving the following schema:\n\n```graphql\ntype Mutation {\n  createUser(user: CreateUser!): String\n}\n\ninput CreateUser {\n  firstName: String!\n  lastName: String!\n  age: Int\n  username: String!\n}\n```\n\nYou can use `ValueTypes['CreateUser']` as params for submit form function\n\n```ts\nconst submitForm = (values: ValueTypes['CreateUser']) => {\n  // ..,rest of the code, validation\n  return Chain('https://yourschemaurl.com/graphql', {\n    headers: {\n      Authorization: 'yourtoken',\n    },\n  })('mutation')({\n    createUser: [{ user: values }, true],\n  });\n};\n```\n",
+    "data": {
+      "link": "forms",
+      "title": "Forms",
+      "order": 1,
+      "category": "Examples"
+    },
+    "excerpt": ""
+  },
   "markdown/basics/use-as-a-library.md": {
     "content": "\n## Generate Code\n\nThis will be rarely used, but here you are! Generate Typescript and Javascript from GraphQL definitions\n\n```js\nimport { TreeToTS } from 'graphql-zeus';\nimport { Parser } from 'graphql-js-tree';\n\nconst schemaFileContents = `\ntype Query{\n    hello: String!\n}\nschema{\n    query: Query\n}\n`;\n\nconst typeScriptDefinition = TreeToTS.resolveTree(Parser.parse(schemaFileContents));\n```\n\n## Dynamically Fetch Schema\n\nThis is useful when you need your schema fetched from your GraphQL endpoint in-code\n\n```js\nimport { Utils } from 'graphql-zeus';\n\nUtils.getFromUrl('https://faker.graphqleditor.com/a-team/olympus/graphql').then((schemaContent) => {\n  // Use schema content here\n});\n```\n",
     "data": {
@@ -144,16 +164,6 @@ var htmlContent = {
       "link": "getting-started",
       "title": "Getting Started",
       "order": 0,
-      "category": "Basics"
-    },
-    "excerpt": ""
-  },
-  "markdown/basics/examples.md": {
-    "content": "\n## Zeus Included Examples\n\nTo run the included examples navigate to: `./examples` and install packages with:\n\n```sh\n$ npm i\n# OR\n# yarn\n```\n\nthen run the examples with\n\n```sh\n$ npm run start\n# OR\n# yarn start\n```\n",
-    "data": {
-      "link": "examples",
-      "title": "Examples",
-      "order": 2,
       "category": "Basics"
     },
     "excerpt": ""
