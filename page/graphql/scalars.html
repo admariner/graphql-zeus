@@ -8,7 +8,7 @@
           const Component = m.default;
         
             import ReactDOM from 'https://cdn.skypack.dev/react-dom';
-            ReactDOM.hydrate(Component({"content":{"content":"\n## Scalars\n\nIn Zeus you can encode and decode scalars\n\n### Decode\n\nDecode function is called every time scalar returns from backend before passing the result from Chain,Subscription functions\n\n```gql\nscalar JSON\nscalar Datetime\ntype Card{\n    info: JSON!\n    createdAt: Datetime\n}\ntype Query:{\n    drawCard: Card!\n}\n```\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst data = await chain('query')(\n  {\n    drawCard: {\n      info: true,\n    },\n  },\n  {\n    scalars: {\n      JSON: {\n        encode: (e: unknown) => JSON.stringify(e),\n        decode: (e: unknown) => JSON.parse(e as string),\n      },\n      Datetime: {\n        decode: (e: unknown) => new Date(e as string),\n        encode: (e: unknown) => (e as Date).toISOString(),\n      },\n    },\n  },\n);\n```\n\nSo the `data.drawCard.info` will be of type `Date` as provided by decoder `ReturnType`\n\n### Encode Scalars\n\nYou can also encode scalars before sending them to backend\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst listCardsAndDraw = await chain('query')(\n  {\n    drawCard: {\n      info: true,\n    },\n  },\n  {\n    scalars: {\n      JSON: {\n        encode: (e: unknown) => JSON.stringify(e),\n        decode: (e: unknown) => JSON.parse(e as string),\n      },\n      Datetime: {\n        decode: (e: unknown) => new Date(e as string),\n        encode: (e: unknown) => (e as Date).toISOString(),\n      },\n    },\n  },\n);\n```\n\nEncoders require value to be encoded to string and don't work with variables yet.\n","data":{"link":"graphql/scalars","title":"Scalars","order":6,"category":"GraphQL"},"excerpt":""},"routes":{"Basics":[{"link":"getting-started","title":"Getting Started","order":0,"category":"Basics"},{"link":"selector","title":"Selector","order":1,"category":"Basics"},{"link":"esmodules","title":"EsModules","order":3,"category":"Basics"},{"link":"spec","title":"Specification","order":4,"category":"Basics"},{"link":"library","title":"Use as a library","order":5,"category":"Basics"},{"link":"javascript","title":"Javascript","order":6,"category":"Basics"},{"link":"custom-fetch","title":"Custom fetch","order":7,"category":"Basics"}],"Examples":[{"link":"forms","title":"Forms","order":1,"category":"Examples"},{"link":"state","title":"React State","order":2,"category":"Examples"}],"GraphQL":[{"link":"graphql/interfaces-and-unions","title":"Interfaces and Unions","order":1,"category":"GraphQL"},{"link":"graphql/variables","title":"Variables","order":2,"category":"GraphQL"},{"link":"graphql/aliases","title":"Aliases","order":3,"category":"GraphQL"},{"link":"graphql/gql","title":"Gql string","order":4,"category":"GraphQL"},{"link":"graphql/directives","title":"Directives","order":5,"category":"GraphQL"},{"link":"graphql/scalars","title":"Scalars","order":6,"category":"GraphQL"}],"Plugins":[{"link":"plugins/apollo","title":"Apollo","order":1,"category":"Plugins"},{"link":"plugins/react-query","title":"React Query","order":2,"category":"Plugins"},{"link":"plugins/stucco","title":"Stucco","order":3,"category":"Plugins"},{"link":"plugins/typedDocumentNode","title":"TypedDocumentNode","order":4,"category":"Plugins"}]},"activeRoute":"graphql/scalars","prefix":""}),document.body)
+            ReactDOM.hydrate(Component({"content":{"content":"\n## Scalars\n\nIn Zeus you can encode and decode scalars\n\n### Decode\n\nDecode function is called every time scalar returns from backend before passing the result from Chain,Subscription functions\n\n```gql\nscalar JSON\nscalar Datetime\ntype Card{\n    info: JSON!\n    createdAt: Datetime\n}\ntype Query:{\n    drawCard: Card!\n}\n```\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst data = await chain('query', {\n  scalars: {\n    JSON: {\n      encode: (e: unknown) => JSON.stringify(e),\n      decode: (e: unknown) => JSON.parse(e as string),\n    },\n    Datetime: {\n      decode: (e: unknown) => new Date(e as string),\n      encode: (e: unknown) => (e as Date).toISOString(),\n    },\n  },\n})({\n  drawCard: {\n    info: true,\n  },\n});\n```\n\nSo the `data.drawCard.info` will be of type `Date` as provided by decoder `ReturnType`\n\n### Encode Scalars\n\nYou can also encode scalars before sending them to backend\n\n```ts\nimport { Chain } from './zeus';\n\n// Create a Chain client instance with the endpoint\nconst chain = Chain('https://faker.graphqleditor.com/a-team/olympus/graphql');\n\n// Query the endpoint with Typescript autocomplete for arguments and response fields\nconst listCardsAndDraw = await chain('query', {\n  scalars: {\n    JSON: {\n      encode: (e: unknown) => JSON.stringify(e),\n      decode: (e: unknown) => JSON.parse(e as string),\n    },\n    Datetime: {\n      decode: (e: unknown) => new Date(e as string),\n      encode: (e: unknown) => (e as Date).toISOString(),\n    },\n  },\n})({\n  drawCard: {\n    info: true,\n  },\n});\n```\n\nEncoders require value to be encoded to string and don't work with variables yet.\n","data":{"link":"graphql/scalars","title":"Scalars","order":6,"category":"GraphQL"},"excerpt":""},"routes":{"Basics":[{"link":"getting-started","title":"Getting Started","order":0,"category":"Basics"},{"link":"selector","title":"Selector","order":1,"category":"Basics"},{"link":"esmodules","title":"EsModules","order":3,"category":"Basics"},{"link":"spec","title":"Specification","order":4,"category":"Basics"},{"link":"library","title":"Use as a library","order":5,"category":"Basics"},{"link":"javascript","title":"Javascript","order":6,"category":"Basics"},{"link":"custom-fetch","title":"Custom fetch","order":7,"category":"Basics"}],"Examples":[{"link":"forms","title":"Forms","order":1,"category":"Examples"},{"link":"state","title":"React State","order":2,"category":"Examples"}],"GraphQL":[{"link":"graphql/interfaces-and-unions","title":"Interfaces and Unions","order":1,"category":"GraphQL"},{"link":"graphql/variables","title":"Variables","order":2,"category":"GraphQL"},{"link":"graphql/aliases","title":"Aliases","order":3,"category":"GraphQL"},{"link":"graphql/gql","title":"Gql string","order":4,"category":"GraphQL"},{"link":"graphql/directives","title":"Directives","order":5,"category":"GraphQL"},{"link":"graphql/scalars","title":"Scalars","order":6,"category":"GraphQL"}],"Plugins":[{"link":"plugins/apollo","title":"Apollo","order":1,"category":"Plugins"},{"link":"plugins/react-query","title":"React Query","order":2,"category":"Plugins"},{"link":"plugins/stucco","title":"Stucco","order":3,"category":"Plugins"},{"link":"plugins/typedDocumentNode","title":"TypedDocumentNode","order":4,"category":"Plugins"}]},"activeRoute":"graphql/scalars","prefix":""}),document.body)
       </script>
 
             <link
@@ -40,25 +40,22 @@
 <span class="hljs-keyword">const</span> chain = <span class="hljs-title class_">Chain</span>(<span class="hljs-string">'https://faker.graphqleditor.com/a-team/olympus/graphql'</span>);
 
 <span class="hljs-comment">// Query the endpoint with Typescript autocomplete for arguments and response fields</span>
-<span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> <span class="hljs-title function_">chain</span>(<span class="hljs-string">'query'</span>)(
-  {
-    <span class="hljs-attr">drawCard</span>: {
-      <span class="hljs-attr">info</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> <span class="hljs-title function_">chain</span>(<span class="hljs-string">'query'</span>, {
+  <span class="hljs-attr">scalars</span>: {
+    <span class="hljs-title class_">JSON</span>: {
+      <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(e),
+      <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
+    },
+    <span class="hljs-title class_">Datetime</span>: {
+      <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
+      <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> (e <span class="hljs-keyword">as</span> <span class="hljs-title class_">Date</span>).<span class="hljs-title function_">toISOString</span>(),
     },
   },
-  {
-    <span class="hljs-attr">scalars</span>: {
-      <span class="hljs-title class_">JSON</span>: {
-        <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(e),
-        <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
-      },
-      <span class="hljs-title class_">Datetime</span>: {
-        <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
-        <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> (e <span class="hljs-keyword">as</span> <span class="hljs-title class_">Date</span>).<span class="hljs-title function_">toISOString</span>(),
-      },
-    },
+})({
+  <span class="hljs-attr">drawCard</span>: {
+    <span class="hljs-attr">info</span>: <span class="hljs-literal">true</span>,
   },
-);
+});
 </code></pre>
 <p>So the <code>data.drawCard.info</code> will be of type <code>Date</code> as provided by decoder <code>ReturnType</code></p>
 <h3>Encode Scalars</h3>
@@ -69,25 +66,22 @@
 <span class="hljs-keyword">const</span> chain = <span class="hljs-title class_">Chain</span>(<span class="hljs-string">'https://faker.graphqleditor.com/a-team/olympus/graphql'</span>);
 
 <span class="hljs-comment">// Query the endpoint with Typescript autocomplete for arguments and response fields</span>
-<span class="hljs-keyword">const</span> listCardsAndDraw = <span class="hljs-keyword">await</span> <span class="hljs-title function_">chain</span>(<span class="hljs-string">'query'</span>)(
-  {
-    <span class="hljs-attr">drawCard</span>: {
-      <span class="hljs-attr">info</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-keyword">const</span> listCardsAndDraw = <span class="hljs-keyword">await</span> <span class="hljs-title function_">chain</span>(<span class="hljs-string">'query'</span>, {
+  <span class="hljs-attr">scalars</span>: {
+    <span class="hljs-title class_">JSON</span>: {
+      <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(e),
+      <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
+    },
+    <span class="hljs-title class_">Datetime</span>: {
+      <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
+      <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> (e <span class="hljs-keyword">as</span> <span class="hljs-title class_">Date</span>).<span class="hljs-title function_">toISOString</span>(),
     },
   },
-  {
-    <span class="hljs-attr">scalars</span>: {
-      <span class="hljs-title class_">JSON</span>: {
-        <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(e),
-        <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
-      },
-      <span class="hljs-title class_">Datetime</span>: {
-        <span class="hljs-attr">decode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(e <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>),
-        <span class="hljs-attr">encode</span>: <span class="hljs-function">(<span class="hljs-params">e: <span class="hljs-built_in">unknown</span></span>) =&gt;</span> (e <span class="hljs-keyword">as</span> <span class="hljs-title class_">Date</span>).<span class="hljs-title function_">toISOString</span>(),
-      },
-    },
+})({
+  <span class="hljs-attr">drawCard</span>: {
+    <span class="hljs-attr">info</span>: <span class="hljs-literal">true</span>,
   },
-);
+});
 </code></pre>
 <p>Encoders require value to be encoded to string and don't work with variables yet.</p>
 </div></div></div></div>
