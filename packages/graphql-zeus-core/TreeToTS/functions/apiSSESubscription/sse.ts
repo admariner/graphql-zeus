@@ -10,6 +10,7 @@ export const apiSubscriptionSSE = (options: chainOptions) => (query: string, var
   let errorCallback: ((args: unknown) => void) | null = null;
   let openCallback: (() => void) | null = null;
   let offCallback: ((args: unknown) => void) | null = null;
+  let isClosing = false; // Flag to track intentional close
 
   const startStream = async () => {
     try {
@@ -81,7 +82,8 @@ export const apiSubscriptionSSE = (options: chainOptions) => (query: string, var
       }
     } catch (err: unknown) {
       const error = err as Error;
-      if (error.name !== 'AbortError' && errorCallback) {
+      // Don't report errors if we're intentionally closing (AbortError) or during cleanup
+      if (error.name !== 'AbortError' && !isClosing && errorCallback) {
         errorCallback({ errors: [error.message || 'Unknown error'] });
       }
     }
@@ -104,17 +106,15 @@ export const apiSubscriptionSSE = (options: chainOptions) => (query: string, var
       startStream();
     },
     close: () => {
-      // Cancel the reader first (if it exists) to gracefully close the stream
+      isClosing = true; // Mark as intentionally closing to suppress error callbacks
+      if (abortController) {
+        abortController.abort();
+      }
       if (reader) {
+        // Wrap in try-catch to suppress AbortError during cleanup
         reader.cancel().catch(() => {
           // Ignore cancel errors - stream may already be closed
         });
-        reader = null;
-      }
-      // Then abort the controller
-      if (abortController) {
-        abortController.abort();
-        abortController = null;
       }
     },
   };
