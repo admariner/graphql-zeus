@@ -468,7 +468,7 @@ export interface GraphQLResponse {
 }
 export class GraphQLError extends Error {
   constructor(public response: GraphQLResponse) {
-    super('');
+    super(response.errors?.[0]?.message || 'GraphQL Response Error');
     console.error(response);
   }
   toString() {
