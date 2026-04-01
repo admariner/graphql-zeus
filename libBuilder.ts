@@ -37,7 +37,53 @@ const bundleFunctions = () => {
   });
 
   const content = `
-  export default ${toTemplateString(allFunctions.join('\n\n'))};
+  const baseTemplate = ${toTemplateString(allFunctions.join('\n\n'))};
+
+  export const generateTypescriptFunctions = (options?: { deno?: boolean }): string => {
+    const deno = options?.deno ?? false;
+    if (!deno) return baseTemplate;
+
+    let result = baseTemplate;
+
+    // Replace fetchOptions type
+    result = result.replace(
+      'export type fetchOptions = Parameters<typeof fetch>;',
+      'export type fetchOptions = [RequestInfo | URL, RequestInit?];',
+    );
+
+    // Replace chainOptions type
+    result = result.replace(
+      'export type chainOptions = [fetchOptions[0], fetchOptions[1] & { websocket?: websocketOptions }] | [fetchOptions[0]];',
+      'export type chainOptions = [fetchOptions[0], (RequestInit & { headers?: Record<string, string> | Headers; websocket?: websocketOptions }) | undefined] | [fetchOptions[0]];',
+    );
+
+    // Replace GraphQLError class - add Object.setPrototypeOf and override toString
+    result = result.replace(
+      \`export class GraphQLError extends Error {
+  constructor(public response: GraphQLResponse) {
+    super(response.errors?.[0]?.message || 'GraphQL Response Error');
+    console.error(response);
+  }
+  toString() {
+    return 'GraphQL Response Error';
+  }
+}\`,
+      \`export class GraphQLError extends Error {
+  constructor(public response: GraphQLResponse) {
+    super(response.errors?.[0]?.message || 'GraphQL Response Error');
+    Object.setPrototypeOf(this, GraphQLError.prototype);
+    console.error(response);
+  }
+  override toString() {
+    return 'GraphQL Response Error';
+  }
+}\`,
+    );
+
+    return result;
+  };
+
+  export default generateTypescriptFunctions();
 
   export const subscriptionFunctions = {${subscriptionFunctions
     .map(([key, value]) => JSON.stringify(key) + ': ' + toTemplateString(value))

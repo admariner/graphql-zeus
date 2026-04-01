@@ -1,5 +1,6 @@
 .vscode
 .DS_STORE
+.basecamp/
 node_modules
 .module-cache
 *.log*

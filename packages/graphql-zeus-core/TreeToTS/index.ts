@@ -8,7 +8,7 @@ import { resolveInputTypes } from '@/TreeToTS/templates/valueTypes/inputTypes';
 import { resolveVariableTypes } from '@/TreeToTS/templates/variableTypes';
 import { createParserField, Options, ParserTree, TypeDefinition } from 'graphql-js-tree';
 import { Environment } from '../Models';
-import { default as typescriptFunctions, subscriptionFunctions, sseFunctions } from './functions/generated';
+import { generateTypescriptFunctions, subscriptionFunctions, sseFunctions } from './functions/generated';
 import { resolvePropTypeFromRoot } from './templates/returnedPropTypes';
 import { resolveReturnFromRoot } from './templates/returnedReturns';
 import { resolveTypes } from './templates/returnedTypes';
@@ -125,7 +125,7 @@ export class TreeToTS {
         .concat('\n')
         .concat(sseFunctions['sse'])
         .concat('\n')
-        .concat(typescriptFunctions)
+        .concat(generateTypescriptFunctions({ deno }))
         .concat('\n')
         .concat(
           TreeToTS.resolveBasisTypes(tree, {

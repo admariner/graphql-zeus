@@ -1,4 +1,4 @@
-export default `const handleFetchResponse = (response: Response): Promise<GraphQLResponse> => {
+const baseTemplate = `const handleFetchResponse = (response: Response): Promise<GraphQLResponse> => {
   if (!response.ok) {
     return new Promise((_, reject) => {
       response
@@ -912,6 +912,52 @@ export const GRAPHQL_TYPE_SEPARATOR = \`__$GRAPHQL__\`;
 export const $ = <Type extends GraphQLVariableType, Name extends string>(name: Name, graphqlType: Type) => {
   return (START_VAR_NAME + name + GRAPHQL_TYPE_SEPARATOR + graphqlType) as unknown as Variable<Type, Name>;
 };`;
+
+export const generateTypescriptFunctions = (options?: { deno?: boolean }): string => {
+  const deno = options?.deno ?? false;
+  if (!deno) return baseTemplate;
+
+  let result = baseTemplate;
+
+  // Replace fetchOptions type
+  result = result.replace(
+    'export type fetchOptions = Parameters<typeof fetch>;',
+    'export type fetchOptions = [RequestInfo | URL, RequestInit?];',
+  );
+
+  // Replace chainOptions type
+  result = result.replace(
+    'export type chainOptions = [fetchOptions[0], fetchOptions[1] & { websocket?: websocketOptions }] | [fetchOptions[0]];',
+    'export type chainOptions = [fetchOptions[0], (RequestInit & { headers?: Record<string, string> | Headers; websocket?: websocketOptions }) | undefined] | [fetchOptions[0]];',
+  );
+
+  // Replace GraphQLError class - add Object.setPrototypeOf and override toString
+  result = result.replace(
+    `export class GraphQLError extends Error {
+  constructor(public response: GraphQLResponse) {
+    super(response.errors?.[0]?.message || 'GraphQL Response Error');
+    console.error(response);
+  }
+  toString() {
+    return 'GraphQL Response Error';
+  }
+}`,
+    `export class GraphQLError extends Error {
+  constructor(public response: GraphQLResponse) {
+    super(response.errors?.[0]?.message || 'GraphQL Response Error');
+    Object.setPrototypeOf(this, GraphQLError.prototype);
+    console.error(response);
+  }
+  override toString() {
+    return 'GraphQL Response Error';
+  }
+}`,
+  );
+
+  return result;
+};
+
+export default generateTypescriptFunctions();
 
 export const subscriptionFunctions = {
   'graphql-ws': `import { createClient, type Sink } from 'graphql-ws'; // keep
